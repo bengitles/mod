@@ -5,6 +5,7 @@ public class GPSLine {
 	private Long d1;
 	private GPSPosition p2;
 	private Long d2;
+	private final static double r = 3.0; //uncertainty radius
 	
 	public GPSLine(GPSPosition p1, long previousTime, GPSPosition p2, long newTime) {
 		this.p1 = p1;
@@ -29,13 +30,13 @@ public class GPSLine {
 			if (t.isNaN()) t = (p3.getAltitude()-p1.getAltitude())/(p2.getAltitude()-p1.getAltitude());
 			double projectedTime = d1 + (d2-d1)*t;
 			return (long) projectedTime;
-		} else if (line.getCosTheta(v1) <= 0 && v1.getMagnitude() <= 3.0) {
+		} else if (line.getCosTheta(v1) <= 0 && v1.getMagnitude() <= r) {
 			return this.d1;
-		} else if (line.getCosTheta(v2) >= 0 && v2.getMagnitude() <= 3.0) {
+		} else if (line.getCosTheta(v2) >= 0 && v2.getMagnitude() <= r) {
 			return this.d2;
 		} else if (line.getCosTheta(v1) > 0 && line.getCosTheta(v2) < 0){
 			double dist = line.cross(v1).getMagnitude() / line.getMagnitude();
-			if (dist <= 3.0) {
+			if (dist <= r) {
 				double t = v1.getMagnitude() / (v1.getMagnitude() + v2.getMagnitude());
 				double projectedTime = d1 + (d2-d1)*t;
 				return (long) projectedTime;

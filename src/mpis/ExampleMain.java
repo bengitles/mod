@@ -30,26 +30,18 @@ public class ExampleMain {
 	   System.out.println("Got "+db.getObject("taxi2").getID());
 	   for (MovingObject mo : db.getObjects()) {
 		   System.out.println("In the database:  "+mo.getID());
+		   db.deleteObject(mo.getID());
 	   }
+	   
+	   
+	   
+	   
 	   db.deleteObject(new MovingObject("taxi1"));
 	   db.deleteObject(new MovingObject("taxi2"));
 	   for (MovingObject mo : db.getObjects()) {
 		   System.out.println("There's still "+mo.getID()+"!");
 	   }
-	   
-      /*final StorageManager sm = new StorageManager();
-      sm.deleteDB();
-      sm.openDB();
-      MovingObject taxi1 = new MovingObject("taxi1");
-      sm.store(taxi1);
-      System.out.println("Stored "+taxi1.getID());
-      MovingObject taxi2 = new MovingObject("taxi2");
-      sm.store(taxi2);
-      System.out.println("Stored "+taxi2.getID());
-      MovingObject taxiPrototype = new MovingObject("");
-      MovingObject result = sm.retrieve(taxiPrototype);
-      System.out.println("Retrieved: "+result.getID());
-      sm.closeDB();*/
+	   db.close();
    }
 
 }

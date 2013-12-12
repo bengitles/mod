@@ -31,7 +31,7 @@ public class Db4MovingObjects {
 	}
 	
 	public MovingObject getObject(String id) {
-		return this.sm.retrieve(new MovingObject(id));
+		return this.sm.retrieveById(id);
 	}
 	
 	public Collection<MovingObject> getObjects() {
@@ -39,6 +39,10 @@ public class Db4MovingObjects {
 	}
 	
 	public void deleteObject(MovingObject mObject) {
-		this.sm.delete(mObject);
+		this.sm.delete(this.getObject(mObject.getID()));
+	}
+	
+	public void deleteObject(String id) {
+		this.sm.delete(this.getObject(id));
 	}
 }

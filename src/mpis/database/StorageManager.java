@@ -5,7 +5,9 @@ import java.util.Collection;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.query.Predicate;
 import com.db4o.ta.TransparentPersistenceSupport;
 
 import mpis.domain.MovingObject;
@@ -54,7 +56,32 @@ public class StorageManager {
    }
 
    public MovingObject retrieve(final MovingObject prototype) {
-      return (MovingObject) this.db.queryByExample(prototype).next();
+      final ObjectSet<Object> result = this.db.queryByExample(prototype);
+      if (result.hasNext()) {
+         return (MovingObject) result.next();
+      }
+      return null;
+   }
+
+   public MovingObject retrieveById(final String id) {
+      final ObjectSet<MovingObject> result = this.db.query(new Predicate<MovingObject>() {
+
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public boolean match(final MovingObject candidate) {
+            if (candidate.getID().equals(id)) {
+               return true;
+            }
+            return false;
+         }
+
+      });
+
+      if (result.hasNext()) {
+         return result.next();
+      }
+      return null;
    }
 
    public void delete(final MovingObject mObject) {

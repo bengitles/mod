@@ -32,7 +32,7 @@ public class MovingObject implements Observer {
 		this.locations = new HashMap<Long, GPSPosition>();
 		this.lines = new LinkedList<GPSLine>();
 		this.setGPSDevice(new GPSDevice(this));
-		//Normalize all times to initialTime = 0
+		//Normalize all times to initialTime = 0 for display purposes
 		this.initialTime = System.currentTimeMillis();
 		this.lastDefinedTime = Long.MIN_VALUE;
 		this.running = false;
@@ -52,10 +52,11 @@ public class MovingObject implements Observer {
 	 * @param newPosition
 	 */
 	public void setPosition(GPSPosition newPosition) {
-		//Define t=0 to be the time that the program begins.
-		long newTime = System.currentTimeMillis()-this.initialTime;
-		System.out.println("New Position: " + newPosition + " at " +newTime);
-		//If there is no lastDefinedTime, don't add any line because that's the first point.
+		long newTime = System.currentTimeMillis();
+		//Display the time in terms of time elapsed from the creation of the object.
+		System.out.println("New Position: " + newPosition + " at " + (newTime - this.initialTime));
+		
+		//If there is no lastDefinedTime, don't add a line because that's the first point.
 		//Otherwise, make a line between the last defined point and the new point.
 		GPSPosition previousPosition = null;
 		if (this.lastDefinedTime != Long.MIN_VALUE) {
@@ -74,7 +75,7 @@ public class MovingObject implements Observer {
 	/**
 	 * This method is not implemented to its fullest potential. I would like to be able to call start(),
 	 * allow the program to run through a loop, then call stop() at a completely separate time to break
-	 * out of the loop and stop the object. My intermediate solution is to prespecify how long the
+	 * out of the loop and stop the object. My intermediate solution is to pre-specify how long the
 	 * object should run for.
 	 * @param timeRunning
 	 */
@@ -97,6 +98,10 @@ public class MovingObject implements Observer {
 	public GPSPosition getPosition(Long d) {
 		Long timeBefore = Long.MIN_VALUE;
 		Long timeAfter = Long.MAX_VALUE;
+		//If the query is given in relational time, convert it to system time, which is
+		//based on milliseconds elapsed since Jan 1, 1970.
+		long fortyYearsInMilliseconds = (long) (1.261*Math.pow(10, 12));
+		if (d < fortyYearsInMilliseconds) d += this.initialTime;
 		for (Long d1 : locations.keySet()) {
 			if (d1==d) {
 				return locations.get(d1);
@@ -177,4 +182,7 @@ public class MovingObject implements Observer {
 		
 	}
 
+	public Long getInitialTime() {
+		return this.initialTime;
+	}
 }

@@ -61,15 +61,16 @@ public class MovingObjectTest {
 		mo.setPosition(new GPSPosition(0,0,0));
 		
 		GPSPosition location1 = new GPSPosition(50,0,0);
-		Long t1 = mo.getDate(location1);
+		Long t1 = mo.getDate(location1) - mo.getInitialTime();
 		assertTrue(t1>=15 && t1<=19);
 		assertTrue(mo.getDate(new GPSPosition(104,0,0))==null);
-		assertTrue(mo.getDate(new GPSPosition(103,0,0))==mo.getDate(new GPSPosition(100,0,0)));
-		Long t2 = mo.getDate(new GPSPosition(100,10,0));
+		assertTrue(mo.getDate(new GPSPosition(103,0,0)) - mo.getInitialTime() ==
+				   mo.getDate(new GPSPosition(100,0,0)) - mo.getInitialTime());
+		Long t2 = mo.getDate(new GPSPosition(100,10,0)) - mo.getInitialTime();
 		assertTrue(t2>=22 && t2<27);
-		Long t3 = mo.getDate(new GPSPosition(100,100,96));
+		Long t3 = mo.getDate(new GPSPosition(100,100,96)) - mo.getInitialTime();
 		assertTrue(t3>60&&t3<=68);
-		System.out.println(mo.getDate(new GPSPosition(0,0,0)));
+		System.out.println(mo.getDate(new GPSPosition(0,0,0)) - mo.getInitialTime());
 	}
 	
 	@Test
@@ -92,10 +93,10 @@ public class MovingObjectTest {
 		mo.setPosition(new GPSPosition(0,0,0));
 		Thread.sleep(100);
 		mo.setPosition(new GPSPosition(100,0,0));
-		Long t = mo.getDate(new GPSPosition(50,2,0));
+		Long t = mo.getDate(new GPSPosition(50,2,0)) - mo.getInitialTime();
 		assertTrue(50<=t && t<=52);
 		assertTrue(mo.getDate(new GPSPosition(105,0,0)) == null);
-		Long t1 = mo.getDate(new GPSPosition(-1,-1,0));
+		Long t1 = mo.getDate(new GPSPosition(-1,-1,0)) - mo.getInitialTime();
 		assertTrue(t1<=1);
 	}
 }
